@@ -1,0 +1,40 @@
+import paramiko
+class switch:
+    def __init__(self,filename):
+        self.filename = filename
+        self.switchlist = []
+       # self.cleanlist = []
+        self.countdict = {}
+        fo = open(self.filename,'r')
+        for lines in fo.readlines():
+            lineitems = lines.strip().split()
+            self.switchlist.extend(lineitems)
+        
+def command(command):
+        """Executes command on switch. Args:
+            command(str):  ssh command to execute
+            """
+        host = ['10.162.215.63','10.162.215.37']
+        client = paramiko.SSHClient()
+        client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+
+        # Make connection and create shell.
+        client.connect(host[0], '22', 'admin', 'Fc4s@nst0re=')
+        shell = client.invoke_shell()
+
+        # Execute command and get results.
+        _, stdout, stderr = client.exec_command(command)
+        #data = shell._read_command_output(stdout, stderr, 'both')
+        print (stdout.read())
+        #print(stdout, stderr, 'both')
+        output=str(stdout.read())
+        print(output)
+
+        # Close connection.
+        shell.close()
+        client.close()
+
+       # return data 
+#host = ['10.162.215.63','10.162.215.37']
+#print (host[0])
+command('firmwareshow')
